@@ -1,27 +1,43 @@
 
-
 export type UserFormDataType = {
+    first_name:string,
+    last_name:string,
     email:string,
-    firstName: string,
-    lastName:string,
-    username:string,
-    password: string,
-    confirmPassword:string
+    password:string,
+    confirmPass:string
+
 }
 
 export type UserType = {
-    firstName:string,
-    lastName:string,
-    username:string,
-    id:number,
-    email:string
+    admin:null
+    created_on:string,
+    email: string,
+    first_name: string,
+    last_name: string,
+    password?: string,
+    modified_on:string,
+    token:string,
+    user_id:number,
+    username: string
 }
-
 
 export type CategoryType = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light'
 
+export type TokenType = {
+    token: string,
+    tokenExpiration: string
+}
 
-export type APIResponse<T> = {
-    error?: string,
-    data?: T
+export type QuestionFormDataType = {
+    question:string,
+    answer:string
+}
+
+export type QuestionType = {
+    id:number,
+    question:string,
+    answer:string,
+    dateCreated:string,
+    userId:number,
+    author: string,
 }

@@ -1,21 +1,36 @@
-import Container from 'react-bootstrap/Container'
-import Navbar from 'react-bootstrap/Navbar'
-import { Nav }from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import Container from 'react-bootstrap/Container';
 
-type Props = {}
+type NavigationProps = {
+    isLoggedIn: boolean,
+    handleClick: () => void
+}
 
-export default function Navigation({}: Props) {
+export default function Navigation({ isLoggedIn, handleClick }: NavigationProps) {
     return (
-    <Navbar bg ="primary" data-bs-theme ="dark">
-        <Container fluid>
-            <Navbar.Brand>QUIZ-API</Navbar.Brand>
-            <Nav className = "me-auto">
-                <Nav.Link  as = {Link} to="/">Home</Nav.Link>
-                <Nav.Link as = {Link} to ="/register">Register</Nav.Link>
-                <Nav.Link as = {Link} to ="/login">Log In</Nav.Link>
-            </Nav>
-        </Container>
-    </Navbar>
+        <Navbar expand='lg' bg='dark' data-bs-theme='dark'>
+            <Container>
+                <Navbar.Brand as={Link} to='/'>Quiz Up API</Navbar.Brand>
+                <Navbar.Toggle aria-controls='nav-collapse' />
+                <Navbar.Collapse id="nav-collapse">
+                    <Nav className='me-auto'>
+                        { isLoggedIn ? (
+                            <>
+                                <Nav.Link as={Link} to='/' onClick={handleClick}>Log Out</Nav.Link>
+                                <Nav.Link as={Link} to='/quiz'>Quiz</Nav.Link>
+                                <Nav.Link as={Link} to='/userquestions'>My Questions</Nav.Link>
+                            </>
+                        ) : (
+                            <>
+                                <Nav.Link as={Link} to='/signup'>Sign Up</Nav.Link>
+                                <Nav.Link as={Link} to='/login'>Log In</Nav.Link>
+                            </>
+                        )}
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     )
 }

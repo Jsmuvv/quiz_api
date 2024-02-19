@@ -1,35 +1,57 @@
-// import Container from "react-bootstrap/Container"
-import Navigation from './Components/Navigation'
-import SignUp from './Components/SignUp'
-import { Route,Routes } from 'react-router-dom'
-import Home from "./Components/Home"
-import LogIn from './Components/LogIn'
-import AlertMessage from './Components/AlertMessage'
-import { useState } from 'react'
-import { CategoryType } from './types'
-
-
-
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navigation from './Components/Navigation';
+import Container from 'react-bootstrap/Container';
+import Home from './views/Home';
+import Login from './views/LogIn';
+import SignUp from './views/SignUp';
+import Quiz from './views/Quiz';
+import AlertMessage from './Components/AlertMessage';
+import { CategoryType, UserType } from './types';
+import UserQuestions from './views/UserQuestion';
+import EditQuestions from './views/EditQuestions';
 
 export default function App() {
 
-  const [message,setMessage] = useState<string|null>(null)
-  const [category,setCategory] = useState<CategoryType|null>(null)
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loggedInUser, setLoggedInUser] = useState<UserType | null>(null);
 
-  const flashMessage = (newMessage:string|null, newCategory:string|null) => {
-    setMessage(newMessage)
-    setCategory(newCategory)
-  }
+    const [message, setMessage] = useState<string | null>(null)
+    const [category, setCategory] = useState<CategoryType | null>(null)
 
-  return (
-    <>
-    <Navigation />
-      {message && < AlertMessage message = {message} category = {category} flashMessage={flashMessage}/>}
-        <Routes>
-          <Route path = "/" element = {<Home />}/>
-          <Route path = "/register" element = {<SignUp flashMessage={flashMessage} />}/>
-          <Route path = "/login" element = {<LogIn flashMessage={flashMessage} />}/>
-        </Routes>
-    </>
-  )
+    const logUserIn = (user: UserType) => {
+        setIsLoggedIn(true);
+        setLoggedInUser(user)
+    }
+
+    const logUserOut = () => {
+        setIsLoggedIn(false);
+        setLoggedInUser(null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenExp');
+        flashMessage("You have logged out", "primary");
+    }
+
+    const flashMessage = (newMessage: string | null, newCategory: CategoryType | null) => {
+        setMessage(newMessage);
+        setCategory(newCategory);
+    }
+
+    return (
+        <div>
+            <Navigation isLoggedIn={isLoggedIn} handleClick={logUserOut} />
+            <Container>
+                {message && <AlertMessage message={message} category={category} flashMessage={flashMessage} />}
+                <Routes>
+                    <Route path='/' element={<Home isLoggedIn={isLoggedIn} currentUser={loggedInUser} />} />
+                    <Route path='/login' element={<Login flashMessage={flashMessage} logUserIn={logUserIn} isLoggedIn={isLoggedIn} />} />
+                    <Route path='/signup' element={<SignUp flashMessage={flashMessage} />} />
+                    <Route path='/quiz' element={<Quiz />} />
+                    <Route path='/userquestions' element={<UserQuestions currentUser={loggedInUser} />} />
+                    <Route path='/editquestions/:questionId' element={<EditQuestions currentUser={loggedInUser} />} />
+                </Routes>
+
+            </Container>
+        </div>
+    )
 }
